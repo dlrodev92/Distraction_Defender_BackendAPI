@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.weblist',
     'rest_framework',
+    'rest_framework_simplejwt',
     'PIL'
 ]
 
@@ -128,3 +129,12 @@ AUTH_USER_MODEL = 'users.User'
 # Image processing settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [  # Fix the typo here
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}

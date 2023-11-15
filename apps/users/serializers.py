@@ -1,5 +1,9 @@
 from rest_framework import serializers
 from apps.users.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenSerializer(TokenObtainPairSerializer):
+    pass
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +16,9 @@ class UserSerializer(serializers.ModelSerializer):
         
         # Create the user without setting the password yet
         user = User.objects.create(**validated_data)
+        
+         # Set the default value for is_active
+        validated_data.setdefault('is_active', True)
         
         if password:
             # Set the password and save the user

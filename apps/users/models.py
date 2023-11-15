@@ -3,7 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 
 
 class UserManager(BaseUserManager):
-    def _create_user(self, username, email, name,last_name, password, is_staff, is_superuser, **extra_fields):
+    def _create_user(self, username, email, name,last_name, password, is_staff, is_superuser, is_active, **extra_fields):
         user = self.model(
             username = username,
             email = email,
@@ -11,6 +11,7 @@ class UserManager(BaseUserManager):
             last_name = last_name,
             is_staff = is_staff,
             is_superuser = is_superuser,
+            is_active = is_active,
             **extra_fields
         )
         user.set_password(password)
@@ -18,10 +19,10 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, username, email, name,last_name, password=None, **extra_fields):
-        return self._create_user(username, email, name,last_name, password, False, False, **extra_fields)
+        return self._create_user(username, email, name,last_name, password, False, False, True, **extra_fields)
 
     def create_superuser(self, username, email, name,last_name, password=None, **extra_fields):
-        return self._create_user(username, email, name,last_name, password, True, True, **extra_fields)
+        return self._create_user(username, email, name,last_name, password, True, True,True, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length = 255, unique = True)
