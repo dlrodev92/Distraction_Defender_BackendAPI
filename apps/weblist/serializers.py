@@ -7,4 +7,4 @@ class WebListSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'title', 'urls_json')
         extra_kwargs = {'user': {'read_only': True}}
         
-    
+   

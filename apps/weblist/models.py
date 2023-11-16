@@ -5,7 +5,7 @@ import json
 class WebList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    urls_json = models.TextField()
+    urls_json = models.TextField(blank=True, null=True)
 
     def set_urls(self, urls):
         self.urls_json = json.dumps(urls)
