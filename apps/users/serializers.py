@@ -19,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
         
          # Set the default value for is_active
         validated_data.setdefault('is_active', True)
+        validated_data.setdefault('is_staff', False)
         
         if password:
             # Set the password and save the user
