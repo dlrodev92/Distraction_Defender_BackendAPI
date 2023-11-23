@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
 
 
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -15,8 +16,15 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return super().get_permissions()
+    
 class Login(TokenObtainPairView):
     serializer_class = CustomTokenSerializer
+    
+    permission_classes = [AllowAny]
     
     def post(self, request, *args, **kwargs):
         username = request.data.get('username', '')
