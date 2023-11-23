@@ -15,11 +15,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    
-    def get_permissions(self):
-        if self.action == 'create':
-            return [AllowAny()]
-        return super().get_permissions()
+    permission_classes = [AllowAny]
+   
     
 class Login(TokenObtainPairView):
     serializer_class = CustomTokenSerializer
