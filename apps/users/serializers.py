@@ -20,6 +20,8 @@ class UserSerializer(serializers.ModelSerializer):
          # Set the default value for is_active
         validated_data.setdefault('is_active', True)
         validated_data.setdefault('is_staff', False)
+        validated_data.setdefault('is_superuser', False)
+        validated_data.setdefault('image', 'https://res.cloudinary.com/dy1xcx7kw/image/upload/v1623346219/Default/default-user-image.png')
         
         if password:
             # Set the password and save the user
