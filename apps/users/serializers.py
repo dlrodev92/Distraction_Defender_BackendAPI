@@ -23,9 +23,9 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create(**validated_data)
         
         # Set the default values for other fields
-        user.is_active = validated_data.get('is_active', True)
-        user.is_staff = validated_data.get('is_staff', False)
-        user.is_superuser = validated_data.get('is_superuser', False)
+        user.is_active = True
+        user.is_staff = False
+        user.is_superuser =  False
         
         if not image:
             # Assign a default image path if no image provided
