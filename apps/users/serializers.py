@@ -22,6 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
         # Create the user without setting the password yet
         user = User.objects.create(**validated_data)
         
+        # Set the default values for other fields
+        user.is_active = validated_data.get('is_active', True)
+        user.is_staff = validated_data.get('is_staff', False)
+        user.is_superuser = validated_data.get('is_superuser', False)
+        
         if not image:
             # Assign a default image path if no image provided
             user.image = 'profileImages/default-user.webp'
@@ -29,11 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
             processed_image = self.process_image(image)
             
             user.image = processed_image
-        
-        # Set the default values for other fields
-        user.is_active = validated_data.get('is_active', True)
-        user.is_staff = validated_data.get('is_staff', False)
-        user.is_superuser = validated_data.get('is_superuser', False)
         
         if password:
             # Set the password and save the user
