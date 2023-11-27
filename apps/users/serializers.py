@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         
         if not image:
             # Assign a default image path if no image provided
-            user.image = 'profileImages/default-user-image.webp'
+            user.image = 'profileImages/default-user.webp'
         else:
             processed_image = self.process_image(image)
             
