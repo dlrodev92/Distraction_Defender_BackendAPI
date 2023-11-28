@@ -14,7 +14,8 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from apps.users.views import Login, Logout
+
+from apps.users.views import Login, Logout, VerifyToken
 
 
 
@@ -40,6 +41,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/toke/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify', VerifyToken.as_view(), name='token_verify'),
     path('login/', Login.as_view(),name='login'),
     path('logout/', Logout.as_view(), name='logout'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

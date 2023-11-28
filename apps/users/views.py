@@ -8,7 +8,8 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.views import APIView
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -56,3 +57,11 @@ class Logout(GenericAPIView):
             RefreshToken.for_user(user.first())
             return Response({'message': 'Sesión cerrada correctamente.'}, status=status.HTTP_200_OK)
         return Response({'error': 'No existe este usuario.'}, status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyToken(APIView):
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request):
+        # El token ha sido validado por el sistema de autenticación JWT
+        # Si la vista llega a este punto, significa que el token es válido
+        return Response({'message': 'Valid Token'}, status=status.HTTP_200_OK)
