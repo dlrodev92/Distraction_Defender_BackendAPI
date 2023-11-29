@@ -14,14 +14,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 class UserViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     
-    # def get_permissions(self):
-    #     if self.action == 'create':
-    #         return [AllowAny()]
-    #     return super().get_permissions()
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return super().get_permissions()
     
 class Login(TokenObtainPairView):
     serializer_class = CustomTokenSerializer
