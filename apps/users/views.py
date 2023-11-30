@@ -74,17 +74,18 @@ class Logout(GenericAPIView):
 class VerifyTokenView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
-        token = request.data.get('token', 0)
+        token = request.data.get('token', '')
 
         if token:
             try:
                 exists = OutstandingToken.objects.filter(token=token).exists()
                 
                 if exists:
-                    return Response({'valid': False}, status=status.HTTP_401_UNAUTHORIZED)
-                else:
                     return Response({'valid': True}, status=status.HTTP_200_OK)
+                else:
+                    return Response({'valid': False}, status=status.HTTP_401_UNAUTHORIZED)
+                    
             except:
-                return Response({'error': 'Token is invalid'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': 'Token is not on the list'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
