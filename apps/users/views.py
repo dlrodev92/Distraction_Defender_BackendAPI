@@ -10,6 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+from rest_framework.views import APIView
 
 
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -68,3 +69,22 @@ class Logout(GenericAPIView):
             return Response({'message': 'Session is over.'}, status=status.HTTP_200_OK)
         return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
+# token verify apiview
+
+class VerifyTokenView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        token = request.data.get('token', 0)
+
+        if token:
+            try:
+                exists = OutstandingToken.objects.filter(token=token).exists()
+                
+                if exists:
+                    return Response({'valid': False}, status=status.HTTP_401_UNAUTHORIZED)
+                else:
+                    return Response({'valid': True}, status=status.HTTP_200_OK)
+            except:
+                return Response({'error': 'Token is invalid'}, status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
