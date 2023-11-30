@@ -8,8 +8,9 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
+
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -34,6 +35,16 @@ class Login(TokenObtainPairView):
         keys_to_include = ['email', 'username', 'id']
         
         if user:
+             # Invalidate previously issued tokens associated with the user
+            tokens = OutstandingToken.objects.filter(user=user)
+            for token in tokens:
+                try:
+                    BlacklistedToken.objects.create(token=token)
+                except:
+                    pass
+            RefreshToken.for_user(user).blacklist()
+            
+            # Generate new tokens
             login_serializer = self.serializer_class(data=request.data)
             if login_serializer.is_valid():
                 user_serializer = UserSerializer(user)
@@ -54,13 +65,6 @@ class Logout(GenericAPIView):
         user = User.objects.filter(id=request.data.get('user', 0))
         if user.exists():
             RefreshToken.for_user(user.first())
-            return Response({'message': 'Sesión cerrada correctamente.'}, status=status.HTTP_200_OK)
-        return Response({'error': 'No existe este usuario.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Session is over.'}, status=status.HTTP_200_OK)
+        return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
-class VerifyToken(APIView):
-    authentication_classes = [JWTAuthentication]
-
-    def get(self, request):
-        # El token ha sido validado por el sistema de autenticación JWT
-        # Si la vista llega a este punto, significa que el token es válido
-        return Response({'message': 'Valid Token'}, status=status.HTTP_200_OK)

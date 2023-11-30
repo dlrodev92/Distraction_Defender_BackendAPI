@@ -6,8 +6,16 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
-    pass
+   def validate(self, attrs):
+        data = super().validate(attrs)
 
+        # Get the user object from the validated data
+        user = self.user
+        
+        # Customize the token payload with additional data
+        data['user_id'] = user.id  
+
+        return data
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -15,7 +15,7 @@ from rest_framework_simplejwt.views import (
 )
 
 
-from apps.users.views import Login, Logout, VerifyToken
+from apps.users.views import Login, Logout
 
 
 
@@ -40,8 +40,7 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/toke/refresh', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/token/verify', VerifyToken.as_view(), name='token_verify'),
+    path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('login/', Login.as_view(),name='login'),
     path('logout/', Logout.as_view(), name='logout'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

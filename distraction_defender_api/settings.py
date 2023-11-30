@@ -1,7 +1,7 @@
-
-
 from pathlib import Path
 import os
+from datetime import timedelta
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,7 +15,6 @@ SECRET_KEY = 'django-insecure-60c-d=8nn0q$ommtekhhjp2*7*kdjh3+(u8o^_5v8us509nifa
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['localhost', 'distraction-defender-server.onrender.com', 'http://127.0.0.1:8000/', '127.0.0.1']
 
 
@@ -34,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'PIL',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +145,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     # Add other allowed origins if needed
 ]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True
+}
