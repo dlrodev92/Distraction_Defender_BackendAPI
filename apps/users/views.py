@@ -82,10 +82,11 @@ class VerifyTokenView(APIView):
                 
                 if exists:
                     return Response({'valid': True}, status=status.HTTP_200_OK)
-                else:
+                else:   
                     return Response({'valid': False}, status=status.HTTP_401_UNAUTHORIZED)
-                    
+                
             except:
                 return Response({'error': 'Token is not on the list'}, status=status.HTTP_401_UNAUTHORIZED)
         else:
             return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
