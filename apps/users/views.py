@@ -62,12 +62,23 @@ class Login(TokenObtainPairView):
         
 class Logout(GenericAPIView):
     
-    def post(self, request, *args, **kwargs):
-        user = User.objects.filter(id=request.data.get('user', 0))
-        if user.exists():
-            RefreshToken.for_user(user.first())
-            return Response({'message': 'Session is over.'}, status=status.HTTP_200_OK)
-        return Response({'error': 'User does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+  def post(self, request, *args, **kwargs):
+        # Obtén el token del cuerpo de la solicitud
+        token = request.data.get('token', '')
+
+        # Crea una instancia de RefreshToken
+        try:
+            refresh_token = RefreshToken(token)
+        except Exception as e:
+            return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Agrega el token a la lista negra
+        try:
+            refresh_token.blacklist()
+        except Exception as e:
+            return Response({'error': 'Unable to blacklist token'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'message': 'Session is over.'}, status=status.HTTP_200_OK)
 
 # token verify apiview
 
