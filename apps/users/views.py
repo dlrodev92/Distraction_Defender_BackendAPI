@@ -1,5 +1,5 @@
 # apps/users/views.py
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .models import User
 from .serializers import UserSerializer, CustomTokenSerializer
 from rest_framework.response import Response
@@ -11,10 +11,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 from rest_framework.views import APIView
-
+from django.utils.decorators import method_decorator
+from distraction_defender_api.middleware.decode_token_middleware import TokenDecodeMiddleware
 
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+@method_decorator(TokenDecodeMiddleware, name='dispatch')
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -23,6 +25,18 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return [AllowAny()]
         return super().get_permissions()
+    
+    def initialize_request(self, request, *args, **kwargs):
+        # This method is called before any other methods in the viewset.
+        # You can access the authenticated user through request.user here.
+        return super().initialize_request(request, *args, **kwargs)
+    
+    def list(self, request, *args, **kwargs):
+        # Recupera información del usuario autenticado
+        user_info = {
+            'user': UserSerializer(request.user).data
+        }
+        return Response(user_info)
     
 class Login(TokenObtainPairView):
     serializer_class = CustomTokenSerializer

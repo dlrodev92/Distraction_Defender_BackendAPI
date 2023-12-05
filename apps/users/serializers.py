@@ -5,6 +5,7 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
 class CustomTokenSerializer(TokenObtainPairSerializer):
    def validate(self, attrs):
         data = super().validate(attrs)
