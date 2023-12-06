@@ -51,21 +51,20 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
     def update(self, instance, validated_data):
-        image = validated_data.pop('image', None)
-        
+        image = validated_data.get('image')
         if image:
             processed_image = self.process_image(image)
             instance.image = processed_image
-        
-        # Update other fields
+
+        # Update username
         instance.username = validated_data.get('username', instance.username)
-        instance.email = validated_data.get('email', instance.email)
-        instance.name = validated_data.get('name', instance.name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.is_active = validated_data.get('is_active', instance.is_active)
-        instance.is_staff = validated_data.get('is_staff', instance.is_staff)
-        instance.is_superuser = validated_data.get('is_superuser', instance.is_superuser)
         
+
+        # Update password
+        password = validated_data.get('password')
+        if password:
+            instance.set_password(password)
+
         instance.save()
         return instance
     

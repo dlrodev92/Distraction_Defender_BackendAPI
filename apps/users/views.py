@@ -1,5 +1,5 @@
 # apps/users/views.py
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets
 from .models import User
 from .serializers import UserSerializer, CustomTokenSerializer
 from rest_framework.response import Response
@@ -13,10 +13,10 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from distraction_defender_api.middleware.decode_token_middleware import TokenDecodeMiddleware
-
+from django.contrib.auth.hashers import check_password
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-@method_decorator(TokenDecodeMiddleware, name='dispatch')
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -31,13 +31,58 @@ class UserViewSet(viewsets.ModelViewSet):
         # You can access the authenticated user through request.user here.
         return super().initialize_request(request, *args, **kwargs)
     
+    @method_decorator(TokenDecodeMiddleware, name='dispatch')
     def list(self, request, *args, **kwargs):
-        # Recupera información del usuario autenticado
+        # Retrieve only the users that the authenticated user has permission to view
         user_info = {
             'user': UserSerializer(request.user).data
         }
         return Response(user_info)
     
+    def update(self, request, *args, **kwargs):
+        try:
+            user_id = kwargs.get('pk') 
+            
+            #we get the user from the database 
+            user = User.objects.get(pk=user_id)
+
+            #we get the updated user data from the request
+            updated_user = request.data
+
+            if updated_user['current_password']:
+                #first chek if the current password is correct
+                if check_password(updated_user['current_password'], user.password):
+                    #if the current password is correct we update the user
+                    user.set_password(updated_user['new_password'])
+                    
+                    if updated_user['username']:
+                        user.username = updated_user['username']
+                    else:
+                        user.username = user.username
+                        
+                    if updated_user['image']:
+                        processed_image = UserSerializer().process_image(updated_user['image'])
+                        user.image = processed_image
+                        
+                    if updated_user['image'] == "":
+                        user.image = user.image
+                else:
+                    return Response({'error': 'Password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'Current password is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.save()
+
+            # Add any additional logic or response as needed
+            return Response({'success': 'User updated successfully'}, status=status.HTTP_200_OK)
+
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+
 class Login(TokenObtainPairView):
     serializer_class = CustomTokenSerializer
     
@@ -96,22 +141,4 @@ class Logout(GenericAPIView):
 
 # token verify apiview
 
-class VerifyTokenView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        token = request.data.get('token', '')
 
-        if token:
-            try:
-                exists = OutstandingToken.objects.filter(token=token).exists()
-                
-                if exists:
-                    return Response({'valid': True}, status=status.HTTP_200_OK)
-                else:   
-                    return Response({'valid': False}, status=status.HTTP_401_UNAUTHORIZED)
-                
-            except:
-                return Response({'error': 'Token is not on the list'}, status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return Response({'error': 'Token not provided'}, status=status.HTTP_400_BAD_REQUEST)
-        
