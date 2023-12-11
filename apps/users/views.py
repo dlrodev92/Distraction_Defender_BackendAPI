@@ -60,12 +60,13 @@ class UserViewSet(viewsets.ModelViewSet):
                     else:
                         user.username = user.username
                         
-                    if updated_user['image']:
-                        processed_image = UserSerializer().process_image(updated_user['image'])
-                        user.image = processed_image
-                        
-                    if updated_user['image'] == "":
+                    if 'image' in updated_user:
+                        if updated_user['image'] is not None and updated_user['image'] != "":
+                            processed_image = UserSerializer().process_image(updated_user['image'])
+                            user.image = processed_image
+                    else:
                         user.image = user.image
+                    
                 else:
                     return Response({'error': 'Password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
             else:
