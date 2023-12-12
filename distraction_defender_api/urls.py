@@ -17,6 +17,8 @@ from rest_framework_simplejwt.views import (
 
 from apps.users.views import Login, Logout
 
+from .blocker.script_views import execute_blocker_script
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Distraction Defender API",
@@ -41,4 +43,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('login/', Login.as_view(),name='login'),
     path('logout/', Logout.as_view(), name='logout'),
+    path('script/', execute_blocker_script, name='create_and_download_script'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

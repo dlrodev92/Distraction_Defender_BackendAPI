@@ -9,6 +9,7 @@ from jinja2 import Template  # Necesitarás instalar Jinja2 con pip install Jinj
 # Determinar la ruta del archivo de hosts según el sistema operativo
 if platform.system() == "Windows":
     host_path = r"C:\Windows\System32\drivers\etc\hosts"
+
     def is_admin():
         try:
             return ctypes.windll.shell32.IsUserAnAdmin()
@@ -51,7 +52,7 @@ def add_websites_hosts_file(websites, host_file, redirect_to):
 
     with open(temporal_host_path, "r") as file:
         content = file.read()
-        
+
     with open(host_file, "a") as file:
         file.write("\n" + content)
 
@@ -65,34 +66,28 @@ def clean_websites_hosts_file(websites, host_file):
                 file.write(line)
 
 # Ejemplo de uso
-from_hour = 23
-to_hour = 00
-
-websites_list = [
-    "www.facebook.com",
-    "facebook.com",
-    "www.youtube.com",
-    "youtube.com",
-    "www.twitter.com",
-    "twitter.com",
-    "www.instagram.com",
-    "instagram.com",
-    "www.reddit.com",
-    "reddit.com",
-]
+from_hour = None
+to_hour = None
+websites_list = []
 
 redirect_to = "127.0.0.1"
 
-while True:
-    if is_working_hours(from_hour, to_hour):
-        remaining_hours = to_hour - dt.now().hour
-        print(f"Working hours... Sites will be unblocked in {remaining_hours} hours.")
-        add_websites_hosts_file(websites_list, host_path, redirect_to)
-        sleep_time = 10  # Dormir durante 60 segundos (1 minuto)
-    else:
-        print("Fun hours...")
-        clean_websites_hosts_file(websites_list, host_path)
-        sleep_time = 10  # Dormir durante 10 segundos
+def run_script(from_hour, to_hour, websites_list, host_path):
+    while True:
+        if is_working_hours(from_hour, to_hour):
+            remaining_hours = to_hour - dt.now().hour
+            print(f"Working hours... Sites will be unblocked in {remaining_hours} hours.")
+            add_websites_hosts_file(websites_list, host_path, redirect_to)
+            sleep_time = 60  # Dormir durante 60 segundos (1 minuto)
+        else:
+            print("Fun hours...")
+            clean_websites_hosts_file(websites_list, host_path)
+            sleep_time = 10  # Dormir durante 10 segundos
 
-    # Esperar antes del próximo ciclo
-    time.sleep(sleep_time)
+        # Esperar antes del próximo ciclo
+        time.sleep(sleep_time)
+
+# this is going to be a script
+
+if __name__ == "__main__":
+    run_script(from_hour, to_hour, websites_list, host_path)
