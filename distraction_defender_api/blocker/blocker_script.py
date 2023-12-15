@@ -65,10 +65,6 @@ def clean_websites_hosts_file(websites, host_file):
             if not any(website in line for website in websites):
                 file.write(line)
 
-# Ejemplo de uso
-from_hour = None
-to_hour = None
-websites_list = []
 
 redirect_to = "127.0.0.1"
 

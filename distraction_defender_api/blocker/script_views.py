@@ -1,10 +1,10 @@
-import json
 import os
-from django.http import JsonResponse
+import json
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
-def execute_blocker_script(request):
+def download_blocker_script(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
@@ -19,21 +19,23 @@ def execute_blocker_script(request):
                 new_websites_list.append(new_website)
                 new_websites_list.append(new_website2)
 
-            # Cargar el contenido del script
+            # Lógica para cargar el contenido del script
             current_directory = os.path.dirname(os.path.abspath(__file__))
             script_path = os.path.join(current_directory, 'blocker_script.py')
             with open(script_path, 'r') as file:
                 script_content = file.read()
 
-            # Reemplazar las partes relevantes del script
-            script_content = script_content.replace("from_hour = data.get('from_hour', None)", f"from_hour = '{from_hour}'")
-            script_content = script_content.replace("to_hour = data.get('to_hour', None)", f"to_hour = '{to_hour}'")
-            script_content = script_content.replace("websites_list = data.get('websites_list', [])", f"websites_list = {new_websites_list}")
+            script_content_lines = script_content.split('\n')
+            script_content_lines.insert(86, f"from_hour = '{from_hour}'")
+            script_content_lines.insert(87, f"to_hour = '{to_hour}'")
+            script_content_lines.insert(88, f"websites_list = {new_websites_list}")
+            script_content = '\n'.join(script_content_lines)
 
-            # Ejecutar el script modificado
-            exec(script_content)
-
-            return JsonResponse({'status': 'success'})
+            # Crear una respuesta para el navegador que descargará el script
+            response = HttpResponse(content_type='application/octet-stream')
+            response['Content-Disposition'] = 'attachment; filename=modified_blocker_script.py'
+            response.write(script_content.encode('utf-8'))  # Asegúrate de codificar el contenido como bytes antes de escribirlo
+            return response
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
 

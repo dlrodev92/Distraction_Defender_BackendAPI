@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.users',
     'apps.weblist',
+    'apps.projects',
     'rest_framework',
     'rest_framework_simplejwt',
     'PIL',

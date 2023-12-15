@@ -17,7 +17,7 @@ from rest_framework_simplejwt.views import (
 
 from apps.users.views import Login, Logout
 
-from .blocker.script_views import execute_blocker_script
+from .blocker.script_views import download_blocker_script
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -36,6 +36,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('apps.users.urls')),
     path('api/', include('apps.weblist.urls')),
+    path('api/', include('apps.projects.urls')),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
@@ -43,5 +44,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('login/', Login.as_view(),name='login'),
     path('logout/', Logout.as_view(), name='logout'),
-    path('script/', execute_blocker_script, name='create_and_download_script'),
+    path('script/', download_blocker_script, name='create_and_download_script'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
