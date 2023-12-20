@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.weblist',
     'apps.projects',
+    'apps.tasks',
     'rest_framework',
     'rest_framework_simplejwt',
     'PIL',
