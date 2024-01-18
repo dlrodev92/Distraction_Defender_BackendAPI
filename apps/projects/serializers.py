@@ -27,7 +27,7 @@ def create(self, validated_data):
 
         return project
 
-def update( instance, validated_data):
+def update( instance, validated_data, update_title=True, update_description=True, update_image=True):
         image = validated_data.get('image')
         if image:
             processed_image = process_image(image)

@@ -146,6 +146,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://distractiondefender.netlify.app/"
     # Add other allowed origins if needed
 ]
 
