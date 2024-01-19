@@ -4,7 +4,6 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.utils.text import slugify
 
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
@@ -71,21 +70,11 @@ class UserSerializer(serializers.ModelSerializer):
     
     # this function is used to process the image and return the path to the processed image
     def process_image(self, image_data):
-        try:
-            # Process the image and return the path to the processed image
-            image = Image.open(image_data)
-            output = BytesIO()
-            image = image.resize((400, 300))
-            image.save(output, format='WEBP', quality=100)
-            output.seek(0)
-
-            # Utiliza el módulo `slugify` para generar un nombre de archivo seguro
-            filename = slugify(image_data.name.split('.')[0]) + '.webp'
-            
-            processed_image = InMemoryUploadedFile(
-                output, 'ImageField', filename, 'image/webp', output.tell(), None
-            )
-            return processed_image
-        except Exception as e:
-            print("Error processing image: ", e)
-            return None
+        # Process the image and return the path to the processed image
+        image = Image.open(image_data)
+        output = BytesIO()
+        image = image.resize((400, 300))
+        image.save(output, format='WEBP', quality=100)
+        output.seek(0)
+        processed_image = InMemoryUploadedFile(output, 'ImageField', "%s.webp" % image_data.name.split('.')[0], 'image/webp', output.tell(), None)
+        return processed_image
