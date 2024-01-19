@@ -73,7 +73,7 @@ class UserSerializer(serializers.ModelSerializer):
         # Process the image and return the path to the processed image
         image = Image.open(image_data)
         output = BytesIO()
-        image = image.resize((300, 300))
+        image = image.resize((400, 300))
         image.save(output, format='WEBP', quality=100)
         output.seek(0)
         processed_image = InMemoryUploadedFile(output, 'ImageField', "%s.webp" % image_data.name.split('.')[0], 'image/webp', output.tell(), None)

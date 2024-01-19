@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-60c-d=8nn0q$ommtekhhjp2*7*kdjh3+(u8o^_5v8us509nifa
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', 'distraction-defender-server.onrender.com', 'http://127.0.0.1:8000/', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', 'distraction-defender-server.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -132,7 +132,7 @@ AUTH_USER_MODEL = 'users.User'
 
 #FUTURE REFERENCE FOR IMAGE UPLOAD
 # Image processing settings
-MEDIA_URL ='/media/'
+MEDIA_URL ='https://distraction-defender-server.onrender.com/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
