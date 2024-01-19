@@ -146,7 +146,8 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://distractiondefender.netlify.app"
+    "https://distractiondefender.netlify.app",
+    "http://localhost:5174",
 ]
 
 SIMPLE_JWT = {
