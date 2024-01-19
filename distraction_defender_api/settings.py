@@ -132,7 +132,7 @@ AUTH_USER_MODEL = 'users.User'
 
 #FUTURE REFERENCE FOR IMAGE UPLOAD
 # Image processing settings
-MEDIA_URL ='https://distraction-defender-server.onrender.com/media/'
+MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
@@ -147,7 +147,6 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://distractiondefender.netlify.app",
-    "http://localhost:5174",
 ]
 
 SIMPLE_JWT = {
