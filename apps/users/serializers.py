@@ -4,6 +4,7 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from distraction_defender_api.image_processor.image_processor import process_image
 
 
 class CustomTokenSerializer(TokenObtainPairSerializer):
@@ -40,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
             # Assign a default image path if no image provided
             user.image = 'profileImages/default-user.webp'
         else:
-            processed_image = self.process_image(image)
+            processed_image = process_image(image)
             
             user.image = processed_image
         
@@ -53,7 +54,7 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         image = validated_data.get('image')
         if image:
-            processed_image = self.process_image(image)
+            processed_image = process_image(image)
             instance.image = processed_image
 
         # Update username
@@ -68,13 +69,5 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-    # this function is used to process the image and return the path to the processed image
-    def process_image(self, image_data):
-        # Process the image and return the path to the processed image
-        image = Image.open(image_data)
-        output = BytesIO()
-        image = image.resize((400, 300))
-        image.save(output, format='WEBP', quality=100)
-        output.seek(0)
-        processed_image = InMemoryUploadedFile(output, 'ImageField', "%s.webp" % image_data.name.split('.')[0], 'image/webp', output.tell(), None)
-        return processed_image
+    
+   
