@@ -9,8 +9,8 @@ def download_blocker_script(request):
         try:
             data = json.loads(request.body.decode('utf-8'))
 
-            from_hour = data.get('from_hour', None)
-            to_hour = data.get('to_hour', None)
+            from_hour = int(data.get('from_hour', 0))
+            to_hour = int(data.get('from_hour', 0))
             websites_list = data.get('websites_list', [])
             new_websites_list = []
             for website in websites_list:
