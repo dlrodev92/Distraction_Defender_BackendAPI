@@ -28,6 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password', None)
         image = validated_data.pop('image', None)  # Get the image data if provided
+        print(image)
         
         # Create the user without setting the password yet
         user = User.objects.create(**validated_data)
@@ -43,7 +44,10 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             processed_image = process_image(image)
             
+            
             user.image = processed_image
+            
+            print(user.image)
         
         if password:
             # Set the password and save the user
