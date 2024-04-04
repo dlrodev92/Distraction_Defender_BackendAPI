@@ -4,6 +4,7 @@ from PIL import Image
 from io import BytesIO
 
 
+
 def process_image(image_data):
         try:
                 # Process the image 
