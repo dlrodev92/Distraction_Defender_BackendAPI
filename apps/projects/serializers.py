@@ -21,7 +21,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             image_url = process_image(image)
             project.image = image_url  # Directly save the URL
         else:
-            project.image = 'projectImages/project-DefaultImage.webp'
+            project.image = 'https://www.eclosio.ong/wp-content/uploads/2018/08/default.png'
 
         project.save()
         return project

@@ -29,7 +29,7 @@ def process_image(image_data):
                 output,
                 settings.AWS_STORAGE_BUCKET_NAME,  
                 file_name,  
-                ExtraArgs={'ContentType': content_type}
+                ExtraArgs={'ContentType': content_type, 'ACL': 'public-read'}
                 )
 
                 # The URL to access the file on S3
