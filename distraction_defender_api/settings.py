@@ -74,14 +74,15 @@ WSGI_APPLICATION = 'distraction_defender_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'fnufleky',  # Database name
-        'USER': 'fnufleky',  # Database user
-        'PASSWORD': 'myBUBAsngX6nVWYG-tv8ie5zh20N8roK',  # Database password
-        'HOST': 'horton.db.elephantsql.com',  # Hostname from ElephantSQL
-        'PORT': '5432',  # Default PostgreSQL port
+        'NAME': 'postgres',  # Database name
+        'USER': 'postgres',  # Database user
+        'PASSWORD': 'rkQgckmRAbuWkQmUUGQDxvpmqpikmhRu',  # Database password
+        'HOST': 'monorail.proxy.rlwy.net',  # Hostname from ElephantSQL
+        'PORT': '58815',  # Default PostgreSQL port
     }
 }
 
