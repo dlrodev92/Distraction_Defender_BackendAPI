@@ -7,6 +7,7 @@ from io import BytesIO
 
 def process_image(image_data):
         try:
+                print(settings.AWS_STORAGE_BUCKET_NAME, settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY, settings.AWS_S3_REGION_NAME,settings.AWS_STORAGE_BUCKET_NAME)
                 # Process the image 
                 image = Image.open(image_data)
                 output = BytesIO()
