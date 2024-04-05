@@ -11,7 +11,6 @@ def process_image(image_data):
                 # Process the image 
                 image = Image.open(image_data)
                 output = BytesIO()
-                image = image.resize((400, 400))
                 image.save(output, format='WEBP', quality=100)
                 output.seek(0)
                 
@@ -34,7 +33,7 @@ def process_image(image_data):
                 )
 
                 # The URL to access the file on S3
-                file_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+                file_url = f"{file_name}"
 
                 print('Image processed and uploaded to S3:', file_url)
                 return file_url
